@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Просмотр игры</title>
+	<script type="text/javascript" src="static/wgo/wgo.js"></script>
+	<script type="text/javascript" src="static/wgo/kifu.js"></script>
+	<script type="text/javascript" src="static/wgo/sgfparser.js"></script>
+	<script type="text/javascript" src="static/wgo/player.js"></script>
+	<script type="text/javascript" src="static/wgo/basicplayer.js"></script>
+	<script type="text/javascript" src="static/wgo/basicplayer.component.js"></script>
+	<script type="text/javascript" src="static/wgo/basicplayer.infobox.js"></script>
+	<script type="text/javascript" src="static/wgo/basicplayer.commentbox.js"></script>
+	<script type="text/javascript" src="static/wgo/basicplayer.control.js"></script>
+	<script type="text/javascript" src="static/wgo/player.editable.js"></script>
+	<script type="text/javascript" src="static/wgo/scoremode.js"></script>
+	<script type="text/javascript" src="static/wgo/player.permalink.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="static/wgo/wgo.player.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/bootstrap-wgo.min.css" />
+</head>
+
+<body>
+
+	<div class="container">
+		<h1>Просмотр игры</h1>
+		<hr>
+		<div data-wgo="{{ sgf }}"
+			data-wgo-board="">
+			Your browser doesn't support WGo Player. Use some modern browser like IE9, Google Chrome or Mozzila Firefox.
+			You can download SGF <a href="test.sgf">directly</a>.
+
+		</div>
+	</div>
+
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8"/>
+	<title>Топ 100 игроков</title>
+	<script type="text/javascript" src="static/js/index.js"></script>
+	<link rel="stylesheet" href="static/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="static/css/index.css" />
+</head>
+
+<body>
+	<div class="container">
+		{% for player in players %}
+		<div class="card" style="margin: 10px">
+			<div class="card-header">
+				{{ player.username }}
+			</div>
+			<ul class="list-group list-group-flush">
+				<li style="cursor: pointer"
+					onclick="view_game('{{ player.username }}', 0, '{{ player.games[0].timestamp }}');"
+					class="list-group-item">{{ player.games[0].white }} vs {{ player.games[0].black }}</li>
+				<li style="cursor: pointer"
+					onclick="view_game('{{ player.username }}', 1, '{{ player.games[1].timestamp }}');"
+					class="list-group-item">{{ player.games[1].white }} vs {{ player.games[1].black }}</li>
+			</ul>
+		</div>
+		{% endfor %}
+	</div>
+
+</html>
