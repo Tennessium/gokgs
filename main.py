@@ -101,15 +101,12 @@ class Game:
         for message in game_data['messages']:
             if message['type'] == 'GAME_JOIN':
                 for step in message['sgfEvents']:
-                    try:
-                        if step['type'] == 'PROP_GROUP_ADDED':
-                            for prop in step['props']:
-                                if 'loc' in prop.keys():
-                                    prop.pop('name', None)
-                                    self.moves.append(prop)
-                                    break
-                    except Exception as e:
-                        print(e)
+                    if step['type'] == 'PROP_GROUP_ADDED':
+                        for prop in step['props']:
+                            if 'loc' in prop.keys() and 'color' in prop.keys():
+                                self.moves.append(prop)
+                            elif prop['name'] == 'TIMELEFT':
+                                self.moves.append(prop)
                 break
 
         self.black_player = update_rank(self.black_player)
@@ -122,8 +119,9 @@ class Game:
         self.sgf += 'WR[' + self.white_player['rank'] + ']'
         self.sgf += 'KM[' + str(self.komi) + ']'
         self.sgf += 'SZ[' + str(self.size) + '];'
+
         for move in self.moves:
-            try:
+            if 'loc' in move.keys():
                 if move['loc'] != 'PASS':
                     if move['color'] == 'black':
                         self.sgf += 'B[' + letters[move['loc']['x']] + \
@@ -131,8 +129,19 @@ class Game:
                     else:
                         self.sgf += 'W[' + letters[move['loc']['x']] + \
                             letters[move['loc']['y']] + '];'
-            except KeyError as e:
-                print(e)
+                else:
+                    if move['color'] == 'black':
+                        self.sgf += 'C[' + self.black_player['name'] + \
+                            ' пропускает ход];'
+                    else:
+                        self.sgf += 'C[' + self.white_player['name'] + \
+                            ' пропускает ход];'
+            elif move['name'] == 'TIMELEFT':
+                if move['color'] == 'black':
+                    self.sgf += 'BL[' + str(int(move['float'])) + '];'
+                else:
+                    self.sgf += 'WL[' + str(int(move['float'])) + ' ];'
+
         self.sgf += ')'
 
 
@@ -182,13 +191,13 @@ def update_games():
                 while j >= 0 and len(PLAYERS[i].games) < 2:
                     game_data = message['games'][j]
                     try:
-                        if game_data['score'] != 'UNFINISHED' and game_data['gameType'] in ['tournament', 'ranked', 'free', 'rengo']:
+                        if game_data['score'] != 'UNFINISHED' and (game_data['gameType'] in ['tournament', 'ranked', 'free', 'rengo']):
                             game = Game()
                             game.timestamp = game_data['timestamp']
                             game.result = game_data['score']
                             game.size = game_data['size']
-                            game.score = game_data['score'] 
-                            # game.duration = game_data['moveNum'] 
+                            game.score = game_data['score']
+                            # game.duration = game_data['moveNum']
                             game.komi = game_data['komi']
                             game.white_player = game_data['players']['white']
                             game.black_player = game_data['players']['black']
@@ -209,7 +218,7 @@ def players_to_dict(players):
         for i in range(2):
             is_rival_white = False
             rival = p.games[i].black_player
-            if p.games[i].black_player['name']==p.username:
+            if p.games[i].black_player['name'] == p.username:
                 is_rival_white = True
                 rival = p.games[i].white_player
             rival = update_rank(rival)
@@ -221,24 +230,26 @@ def players_to_dict(players):
                 'number': i,
                 'is_rival_white': is_rival_white,
                 'timestamp': time,
-                'rival':rival,
+                'rival': rival,
                 'size': p.games[i].size,
                 'score': p.games[i].score
-                #'duration': p.games[i].duration
+                # 'duration': p.games[i].duration
             })
 
         data.append({
             'place': p.place,
             'username': p.username,
-            'rank':p.rank,
+            'rank': p.rank,
             'games': games
         })
     return data
 
+
 def update_rank(player):
     if not 'rank' in player.keys():
-            player['rank'] = '?'
+        player['rank'] = '?'
     return player
+
 
 @ app.route('/')
 def main():
