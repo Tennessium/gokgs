@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from requests import Session, get
 from requests.exceptions import ConnectionError
 from bs4 import BeautifulSoup
+from datetime import datetime
+from dateutil import parser
 from time import sleep
 from tqdm import tqdm
 from local_settings import PASSWORD, USERNAME
@@ -110,6 +112,9 @@ class Game:
                         print(e)
                 break
 
+        self.black_player = update_rank(self.black_player)
+        self.white_player = update_rank(self.white_player)
+
         self.sgf = '(;'
         self.sgf += 'PB[' + self.black_player['name'] + ']'
         self.sgf += 'PW[' + self.white_player['name'] + ']'
@@ -182,6 +187,8 @@ def update_games():
                             game.timestamp = game_data['timestamp']
                             game.result = game_data['score']
                             game.size = game_data['size']
+                            game.score = game_data['score'] 
+                            # game.duration = game_data['moveNum'] 
                             game.komi = game_data['komi']
                             game.white_player = game_data['players']['white']
                             game.black_player = game_data['players']['black']
@@ -198,20 +205,40 @@ def update_games():
 def players_to_dict(players):
     data = []
     for p in players:
+        games = []
+        for i in range(2):
+            is_rival_white = False
+            rival = p.games[i].black_player
+            if p.games[i].black_player['name']==p.username:
+                is_rival_white = True
+                rival = p.games[i].white_player
+            rival = update_rank(rival)
+
+            time = parser.parse(p.games[i].timestamp)
+            time = time.ctime()
+
+            games.append({
+                'number': i,
+                'is_rival_white': is_rival_white,
+                'timestamp': time,
+                'rival':rival,
+                'size': p.games[i].size,
+                'score': p.games[i].score
+                #'duration': p.games[i].duration
+            })
+
         data.append({
+            'place': p.place,
             'username': p.username,
-            'games': [{
-                'white': p.games[0].white_player['name'],
-                'black': p.games[0].black_player['name'],
-                'timestamp': p.games[0].timestamp
-            }, {
-                'white': p.games[1].white_player['name'],
-                'black': p.games[1].black_player['name'],
-                'timestamp': p.games[1].timestamp
-            }]
+            'rank':p.rank,
+            'games': games
         })
     return data
 
+def update_rank(player):
+    if not 'rank' in player.keys():
+            player['rank'] = '?'
+    return player
 
 @ app.route('/')
 def main():
@@ -230,7 +257,7 @@ def viewer():
 
 
 if __name__ == '__main__':
-    app.debug = False
+    app.debug = True
     if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         update_games()
     app.run()

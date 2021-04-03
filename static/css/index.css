@@ -1,8 +1,74 @@
 .container {
 	display: flex;
-	flex-wrap: wrap;
-	flex-direction: row;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-start;
 	justify-content: center;
 	flex-flow: space-between;
+}
+.divider{
+	border-bottom: 1px solid black;
+	margin: 5px;
+}
+.game-group{
+	margin: 5px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.card-header{
+	margin: 5px;
+	font-size: x-large;
+}
+.card {
+	margin: 10px;
+	width: 100%;
+}
+.game {
+	align-items: center;
+	cursor: pointer;
+	border: 1px solid rgba(122, 238, 238, 0.789);
+	border-radius: 10px;
+	display: flex;
+	margin-bottom: 5px;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: auto;
+}
+.game-item{
+	user-select: none;
+	padding: 5px;
+	margin: 5px;
+
+}
+.go-black {
+	width: 20px;
+	height: 20px;
+	background: rgb(35,36,39);
+	background: -moz-linear-gradient(-45deg,  rgba(35,36,39,1) 0%, rgba(0,0,0,1) 100%);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(35,36,39,1)), color-stop(100%,rgba(0,0,0,1)));
+	background: -webkit-linear-gradient(-45deg,  rgba(35,36,39,1) 0%,rgba(0,0,0,1) 100%);
+	background: -o-linear-gradient(-45deg,  rgba(35,36,39,1) 0%,rgba(0,0,0,1) 100%);
+	background: -ms-linear-gradient(-45deg,  rgba(35,36,39,1) 0%,rgba(0,0,0,1) 100%);
+	background: linear-gradient(135deg,  rgba(35,36,39,1) 0%,rgba(0,0,0,1) 100%);
+}
+
+.go-white  {
+	width: 20px;
+	height: 20px;
+	background: rgb(255,255,255);
+	background: -moz-linear-gradient(-45deg,  rgba(255,255,255,1) 0%, rgba(246,246,246,1) 47%, rgba(237,237,237,1) 100%);
+	background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(47%,rgba(246,246,246,1)), color-stop(100%,rgba(237,237,237,1)));
+	background: -webkit-linear-gradient(-45deg,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+	background: -o-linear-gradient(-45deg,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+	background: -ms-linear-gradient(-45deg,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+	background: linear-gradient(135deg,  rgba(255,255,255,1) 0%,rgba(246,246,246,1) 47%,rgba(237,237,237,1) 100%);
+    
+}
+.go {
+	content: ' ';
+	float: right;
+	width: 9px;
+	height: 9px;
+	border-radius: 9px;
+	box-shadow: 1px 1px 1px 1px rgb(127 127 127 / 30%);
 }
