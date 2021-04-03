@@ -157,27 +157,27 @@ def update_games():
     print('Loading games...')
     i = 0
     while i < len(PLAYERS):
-        try:
+        archive = send(s, {
+            'type': 'JOIN_ARCHIVE_REQUEST',
+            'name': PLAYERS[i].username
+        })
+
+        while archive == -1:
+            logout(s)
+            channelId = login(s)
             archive = send(s, {
                 'type': 'JOIN_ARCHIVE_REQUEST',
                 'name': PLAYERS[i].username
             })
 
-            while archive == -1:
-                logout(s)
-                channelId = login(s)
-                archive = send(s, {
-                    'type': 'JOIN_ARCHIVE_REQUEST',
-                    'name': PLAYERS[i].username
-                })
-
-            PLAYERS[i].games = []
-            for message in archive['messages']:
-                if 'games' in message.keys():
-                    j = len(message['games']) - 1
-                    while j >= 0 and len(PLAYERS[i].games) < 2:
-                        game_data = message['games'][j]
-                        if game_data['score'] != 'UNFINISHED' and game_data['gameType'] == 'ranked':
+        PLAYERS[i].games = []
+        for message in archive['messages']:
+            if 'games' in message.keys():
+                j = len(message['games']) - 1
+                while j >= 0 and len(PLAYERS[i].games) < 2:
+                    game_data = message['games'][j]
+                    try:
+                        if game_data['score'] != 'UNFINISHED' and game_data['gameType'] in ['tournament', 'ranked', 'free', 'rengo']:
                             game = Game()
                             game.timestamp = game_data['timestamp']
                             game.result = game_data['score']
@@ -185,35 +185,14 @@ def update_games():
                             game.komi = game_data['komi']
                             game.white_player = game_data['players']['white']
                             game.black_player = game_data['players']['black']
-                            # game.load(s, channelId)
                             PLAYERS[i].games.append(game)
-                            j -= 1
-                        else:
-                            j -= 1
-                    j = len(message['games']) - 1
-                    while j >= 0 and len(PLAYERS[i].games) < 2:
-                        game_data = message['games'][j]
-                        if game_data['score'] != 'UNFINISHED' and game_data['gameType'] == 'free':
-                            game = Game()
-                            game.timestamp = game_data['timestamp']
-                            game.result = game_data['score']
-                            game.size = game_data['size']
-                            game.komi = game_data['komi']
-                            game.white_player = game_data['players']['white']
-                            game.black_player = game_data['players']['black']
-                            # game.load(s, channelId)
-                            PLAYERS[i].games.append(game)
-                            j -= 1
-                        else:
-                            j -= 1
+                    except KeyError:
+                        pass
+                    j -= 1
 
-        except KeyError:
-            i -= 1
-        except Exception as e:
-            print(e)
-            quit()
         print('\r', i, 'out of', len(PLAYERS), end='')
-        i += 1
+        if len(PLAYERS[i].games) == 2:
+            i += 1
 
 
 def players_to_dict(players):
