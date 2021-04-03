@@ -4,12 +4,12 @@ from requests.exceptions import ConnectionError
 from bs4 import BeautifulSoup
 from time import sleep
 from tqdm import tqdm
+from local_settings import PASSWORD, USERNAME
 import os
+
 
 app = Flask(__name__)
 API_URL = 'https://www.gokgs.com/json-cors/access'
-USERNAME = 'tenessinum'
-PASSWORD = 'fo4j77'
 PLAYERS = []
 s = Session()
 channelId = 0
