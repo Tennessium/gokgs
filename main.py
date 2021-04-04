@@ -109,6 +109,9 @@ class Game:
                                 good_prop['color'] = prop['color']
                             elif prop['name'] == 'TIMELEFT':
                                 good_prop['left'] = prop
+                            if prop['name'] == 'ADDSTONE':
+                                self.moves.append(good_prop)
+                                good_prop = {}
                         if good_prop != {}:
                             self.moves.append(good_prop)
 
@@ -190,9 +193,17 @@ def update_games():
                 'type': 'JOIN_ARCHIVE_REQUEST',
                 'name': PLAYERS[i].username
             })
-
         PLAYERS[i].games = []
+        PLAYERS[i].is_plays_with_stronger = False
+        PLAYERS[i].is_robot = False
         for message in archive['messages']:
+            if 'user' in message.keys() and 'flags' in message['user']:
+                flags = message['user']['flags']
+                if '~' in flags:
+                    PLAYERS[i].is_plays_with_stronger = True
+                if 'c' in flags:
+                    PLAYERS[i].is_robot = True
+
             if 'games' in message.keys():
                 j = len(message['games']) - 1
                 while j >= 0 and len(PLAYERS[i].games) < 2:
@@ -204,7 +215,14 @@ def update_games():
                             game.result = game_data['score']
                             game.size = game_data['size']
                             game.score = game_data['score']
-                            # game.duration = game_data['moveNum']
+                            try:
+                                score = float(game.score)
+                                if score > 0:
+                                    game.score = 'B+' + str(score)
+                                else:
+                                    game.score = 'W+' + str(score * -1)
+                            except ValueError:
+                                pass
                             game.komi = game_data['komi']
                             game.white_player = game_data['players']['white']
                             game.black_player = game_data['players']['black']
@@ -240,12 +258,13 @@ def players_to_dict(players):
                 'rival': rival,
                 'size': p.games[i].size,
                 'score': p.games[i].score
-                # 'duration': p.games[i].duration
             })
 
         data.append({
             'place': p.place,
             'username': p.username,
+            'IPWS': p.is_plays_with_stronger,
+            'robot': p.is_robot,
             'rank': p.rank,
             'games': games
         })

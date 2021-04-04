@@ -4,15 +4,24 @@ body {
 	align-items: center;
 	justify-content: center;
 	flex-flow: space-between;
+	min-width: 650px;
 }
 
-a {
-	color: rgb(35, 36, 39);
+.intro {
+	margin: 10px 30px;
+}
+.game-ref {
+	text-decoration:none;
+	color: black
 }
 
 .header-title {
 	margin: 10px;
 	margin-top: 30px;
+}
+.card{
+	margin: 10px;
+	min-width: 600px;
 }
 
 ._container {

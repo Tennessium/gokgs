@@ -4,22 +4,32 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>Топ 100 игроков</title>
+	<link rel="stylesheet" href="static/css/bootstrap.css" />
 	<link rel="stylesheet" href="static/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="static/css/index.css" />
 </head>
 
 <body>
-	<h1 class="header-title">Топ 100 игроков</h1>
+	<div class='row py-lg-5 text-center container'>
+		<div class='col-lg-10 col-md-8 mx-auto'>
+			<h1 class="header-title fw-light">Топ 100 игроков</h1>
+			<div class="lead text-muted">Добро пожаловать на доску почета сервера <a href='https://www.gokgs.com/'>gokgs.com</a>.</div>
+			<div class="lead text-muted">Здесь вы можете посмотреть на две последние игры топов. </div>
+			<div class="lead text-muted">Какого цвета был противник, какой у него ранг, какой результат и когда они играли, все собрано здесь</div>
+		</div>
+	</div>
 
 	<div class="_container">
 		{% for player in players %}
-		<div class="card" style="margin: 10px">
+		<div class="card">
 			<div class="card-header">
-				{{ player.place }}. {{ player.username }} {{ player.rank }}
+				{{ player.place }}. {{ player.username }} {{ player.rank }} 
+				{% if player.IPWS %} часто с игроками сильнее его {% endif %}
+				{% if player.robot %} (а еще он робот) {% endif %}
 			</div>
 			<ul class="list-group list-group-flush">
 				{% for game in player.games %}
-				<a style="text-decoration:none" href="/viewer?player={{ player.username }}&game={{ game.number }}">
+				<a class='game-ref' href="/viewer?player={{ player.username }}&game={{ game.number }}">
 					<div class="list-group-item game">
 						<div class="game-item go {% if game.is_rival_white %} go-white {% else %} go-black {% endif %}">
 						</div>
