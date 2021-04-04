@@ -2,32 +2,35 @@
 <html>
 
 <head>
-	<meta charset="UTF-8"/>
+	<meta charset="UTF-8" />
 	<title>Топ 100 игроков</title>
-	<script type="text/javascript" src="static/js/index.js"></script>
+	<link rel="stylesheet" href="static/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="static/css/index.css" />
 </head>
 
 <body>
-	<div class="container">
+	<h1 class="header-title">Топ 100 игроков</h1>
+
+	<div class="_container">
 		{% for player in players %}
-		<div class="card">
+		<div class="card" style="margin: 10px">
 			<div class="card-header">
 				{{ player.place }}. {{ player.username }} {{ player.rank }}
 			</div>
-			<div class="divider"></div>
-			<div class="game-group">
+			<ul class="list-group list-group-flush">
 				{% for game in player.games %}
-				<div class="game"
-					onclick="view_game('{{ player.username }}','{{ game.number }}', '{{ game.timestamp }}');">
-					<div class="game-item go {% if game.is_rival_white %} go-white {% else %} go-black {% endif %}"></div>
-					<div class="game-item">{{ game.rival.name }} {{ game.rival.rank }}</div>
-					<div class="game-item">{{ game.score}}</div>
-					<div class="game-item">{{ game.size}}X{{ game.size}}</div>
-					<div class="game-item">{{ game.timestamp}}</div>
-				</div>
+				<a style="text-decoration:none" href="/viewer?player={{ player.username }}&game={{ game.number }}">
+					<div class="list-group-item game">
+						<div class="game-item go {% if game.is_rival_white %} go-white {% else %} go-black {% endif %}">
+						</div>
+						<div class="game-item">{{ game.rival.name }} {{ game.rival.rank }} </div>
+						<div class="game-item">{{ game.score }} </div>
+						<div class="game-item">{{ game.size }}X{{ game.size }} </div>
+						<div class="game-item">{{ game.timestamp }}</div>
+					</div>
+				</a>
 				{% endfor %}
-			</div>
+			</ul>
 		</div>
 		{% endfor %}
 	</div>

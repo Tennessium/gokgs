@@ -102,11 +102,16 @@ class Game:
             if message['type'] == 'GAME_JOIN':
                 for step in message['sgfEvents']:
                     if step['type'] == 'PROP_GROUP_ADDED':
+                        good_prop = {}
                         for prop in step['props']:
                             if 'loc' in prop.keys() and 'color' in prop.keys():
-                                self.moves.append(prop)
+                                good_prop['loc'] = prop['loc']
+                                good_prop['color'] = prop['color']
                             elif prop['name'] == 'TIMELEFT':
-                                self.moves.append(prop)
+                                good_prop['left'] = prop
+                        if good_prop != {}:
+                            self.moves.append(good_prop)
+
                 break
 
         self.black_player = update_rank(self.black_player)
@@ -125,22 +130,24 @@ class Game:
                 if move['loc'] != 'PASS':
                     if move['color'] == 'black':
                         self.sgf += 'B[' + letters[move['loc']['x']] + \
-                            letters[move['loc']['y']] + '];'
+                            letters[move['loc']['y']] + ']'
                     else:
                         self.sgf += 'W[' + letters[move['loc']['x']] + \
-                            letters[move['loc']['y']] + '];'
+                            letters[move['loc']['y']] + ']'
                 else:
                     if move['color'] == 'black':
                         self.sgf += 'C[' + self.black_player['name'] + \
-                            ' пропускает ход];'
+                            ' пропускает ход]'
                     else:
                         self.sgf += 'C[' + self.white_player['name'] + \
-                            ' пропускает ход];'
-            elif move['name'] == 'TIMELEFT':
-                if move['color'] == 'black':
-                    self.sgf += 'BL[' + str(int(move['float'])) + '];'
+                            ' пропускает ход]'
+            if 'left' in move.keys():
+                if move['left']['color'] == 'black':
+                    self.sgf += 'BL[' + str(int(move['left']['float'])) + '];'
                 else:
-                    self.sgf += 'WL[' + str(int(move['float'])) + ' ];'
+                    self.sgf += 'WL[' + str(int(move['left']['float'])) + ' ];'
+            else:
+                self.sgf += ';'
 
         self.sgf += ')'
 
