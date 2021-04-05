@@ -284,9 +284,12 @@ def main():
 @ app.route('/viewer')
 def viewer():
     username = request.args.get('player')
+    if username is None:
+        return render_template('error_page.html', message='Введите игрока', code=403), 403
+
     try:
         game = int(request.args.get('game'))
-    except ValueError:
+    except (ValueError, TypeError) as e:
         return render_template('error_page.html', message='У игры должен быть номер', code=403), 403
     if game > 1 or game < 0:
         return render_template('error_page.html', message='Игра не найдена', code=404), 404
