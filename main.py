@@ -8,6 +8,7 @@ from time import sleep
 from tqdm import tqdm
 from local_settings import PASSWORD, USERNAME
 import os
+import logging
 
 
 app = Flask(__name__)
@@ -311,6 +312,9 @@ if __name__ == '__main__':
     app.debug = False
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, internal_error)
+
     if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         update_games()
+
+    logging.basicConfig(filename='debug.log',level=logging.DEBUG)
     app.run()
