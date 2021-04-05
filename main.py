@@ -281,20 +281,33 @@ def update_rank(player):
 def main():
     return render_template('index.html', players=players_to_dict(PLAYERS))
 
-
 @ app.route('/viewer')
 def viewer():
     username = request.args.get('player')
-    game = int(request.args.get('game'))
+    try:
+        game = int(request.args.get('game'))
+    except ValueError:
+        return render_template('error_page.html', message='У игры должен быть номер', code=403), 403
+    if game > 1 or game < 0:
+        return render_template('error_page.html', message='Игра не найдена', code=404), 404
     for p in PLAYERS:
         if p.username == username:
             while len(p.games[game].moves) == 0:
                 p.games[game].load(s, channelId)
             return render_template('game_viewer.html', sgf=p.games[game].sgf)
+    return render_template('error_page.html', message='Игрок не найден', code=404), 404
+    
 
+def page_not_found(e):
+    return render_template('error_page.html', code=404, message='Вы потерялись('), 404
+
+def internal_error(e):
+    return render_template('error_page.html', code=500, message='У нас что-то случилось, но мы исправим'), 500
 
 if __name__ == '__main__':
-    app.debug = True
+    app.debug = False
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, internal_error)
     if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
         update_games()
     app.run()
