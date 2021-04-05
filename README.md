@@ -27,8 +27,8 @@
 ## Видео демонстрация, подтверждающая работоспособность заявленного
 ## Описание стека технологий и библиотек
 
-Web приложение написано на [Flask](https://flask.palletsprojects.com/en/1.1.x/) с использованием библеотеки [WGo.js](https://github.com/waltheri/wgo.js/). Для некоторых элементов верски использовался [Bootstrap](https://getbootstrap.com/). Запросы выполнялись с помощью python библеотеки [requests](https://docs.python-requests.org/en/master/). 
-С парсингом главной страницы помог [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/).
+Web приложение написано на [Flask](https://flask.palletsprojects.com/en/1.1.x/) с использованием библиотеки [WGo.js](https://github.com/waltheri/wgo.js/). Для некоторых элементов верски использовался [Bootstrap](https://getbootstrap.com/). Запросы выполнялись с помощью python библиотеки [requests](https://docs.python-requests.org/en/master/). 
+С парсингом главной страницы помог [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/). Для логирование используем [logging](https://docs.python.org/3/library/logging.html)
 ##  Схема архитектуры системы
 Функции `login`, `logout`, `send` и вызов `requests.get` в функции `get_players `отвечают за работу с сетью. 
 

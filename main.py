@@ -25,14 +25,14 @@ def send(session, data):
         session.post(API_URL, json=data)
         req = session.get(API_URL)
         if req.status_code != 200:
-            print(req.status_code, 'status')
+            logging.error(str(req.status_code)+ ' status')
             return -1
         return req.json()
     except ConnectionError:
         print('Connection erroe')
         return send(session, data)
     except Exception as e:
-        print(e)
+        logging.error(str(e))
         quit()
 
 
